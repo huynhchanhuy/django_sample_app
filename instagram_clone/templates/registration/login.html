@@ -1,0 +1,25 @@
+{% extends "base/base1.html" %}
+{% load i18n %}
+
+{% block content %}
+<div class="formBlock">
+<h3>Welcome Back</h3>
+<form method="post" action=".">{% csrf_token %}
+
+  <label>Username:</label><br />
+  {{ form.username }}<br /><br />
+
+  <label>Password:</label><br />
+  {{ form.password }}<br /><br />
+
+  <input type="submit" value="{% trans 'Log in' %}" class="updateButton" style="width: 125px; height: 30px; padding-top: 5px; padding-bottom: 5px; line-height: 20px; color: #fff;" />
+  <input type="hidden" name="next" value="{{ next }}" />
+</form>
+
+<p style="font-size: 20px;">{% trans "Forgot password" %}? <a href="{% url "auth_password_reset" %}">{% trans "Reset it" %}</a></p>
+<p style="font-size: 20px;">{% trans "Not member" %}? <a href="{% url "registration_register" %}">{% trans "Register" %}</a></p>
+    
+    <p>or</p>
+
+</div>
+{% endblock %}

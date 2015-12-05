@@ -1,0 +1,51 @@
+{% extends "base/base1.html" %}
+
+{% block title %}Register for an account{% endblock %}
+{% block body_class %}{{ block.super }} registration_form{% endblock %}
+
+
+{% block content_title %}
+  <h2>Register for an account</h2>
+{% endblock %}
+
+
+{% block content %}
+<div class="formBlock">
+<h3>Registration</h3>
+  <form action="{% url 'registration_register' %}" method="post">{% csrf_token %}
+    
+    <label>Username:</label><br />
+  {{ form.username }}<br /><br />
+
+  <label>Email:</label><br />
+  {{ form.email }}<br /><br />
+
+  <label>Password:</label><br />
+  {{ form.password1 }}<br /><br />
+
+  <label>Password (again):</label><br />
+  {{ form.password2 }}<br /><br />
+
+
+  <p class="submit"><button type="submit" class="updateButton">Register</button></p>
+  </form>
+    
+    <p>or</p>
+
+
+</div>
+
+<div class="formInstructions">
+<h3>Please Read</h3>
+<div class="formInstructionContainer">
+
+<h4>Why should I Register?</h4>
+
+<p>In order to submit movie reviews you need to be registered.   
+Some reviews make it to a movie's front page.  This can lead to substantial exposure to your website or blog.  
+Once registered you will be able to provide your social media contacts to gain further exposure.   </p>
+</div>
+</div>
+<div class="clr"></div>
+{% endblock %}
+

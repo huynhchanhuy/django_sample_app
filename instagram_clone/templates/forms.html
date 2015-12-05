@@ -1,5 +1,28 @@
-<form action="" method="POST">
-	{% csrf_token %}
-	{{form.as_p}}
-	<input class="btn btn-primary" type="submit" value="Send"/>
-</form>
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+
+{% block content %}
+
+{% if title %}
+<div class="row">
+	
+	<div class="col-sm-6 col-sm-offset-3">
+		<h1 class="text-align-center">
+			{{title}}
+		</h1>
+
+	</div>
+
+</div>
+{% endif %}
+
+<div class="row">
+	<div class="col-sm-6 col-sm-offset-3">
+		<form action="" method="POST">
+			{% csrf_token %}
+			{{form|crispy}}
+			<input class="btn btn-primary" type="submit" value="Send"/>
+		</form>
+	</div>
+</div>
+{% endblock %}

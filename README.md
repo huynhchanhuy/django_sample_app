@@ -1,1 +1,5 @@
-# django_sample_app
+# Django Sample App
+
+source bin/activate
+cd instagram_clone
+./manage.py runserver

@@ -1,4 +1,5 @@
-{% extends "base/base1.html" %}
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
 
 {% block title %}Register for an account{% endblock %}
 {% block body_class %}{{ block.super }} registration_form{% endblock %}
@@ -11,31 +12,35 @@
 
 {% block content %}
 <div class="formBlock">
-<h3>Registration</h3>
-  <form action="{% url 'registration_register' %}" method="post">{% csrf_token %}
-    
-    <label>Username:</label><br />
-  {{ form.username }}<br /><br />
+  <div class="row">
+    <div class="col-md-5">
+        <h3>Registration</h3>
+          <form action="{% url 'registration_register' %}" method="post">{% csrf_token %}
+            
+        <!--     <label>Username:</label><br />
+          {{ form.username }}<br /><br />
 
-  <label>Email:</label><br />
-  {{ form.email }}<br /><br />
+          <label>Email:</label><br />
+          {{ form.email }}<br /><br />
 
-  <label>Password:</label><br />
-  {{ form.password1 }}<br /><br />
+          <label>Password:</label><br />
+          {{ form.password1 }}<br /><br />
 
-  <label>Password (again):</label><br />
-  {{ form.password2 }}<br /><br />
+          <label>Password (again):</label><br />
+          {{ form.password2 }}<br /><br /> -->
+          {{form|crispy}}
 
 
-  <p class="submit"><button type="submit" class="updateButton">Register</button></p>
-  </form>
-    
-    <p>or</p>
-
+          <p class="submit"><button type="submit" class="updateButton">Register</button></p>
+          </form>
+            
+            <!-- <p>or</p> -->
+        </div>
+      </div>
 
 </div>
 
-<div class="formInstructions">
+<!-- <div class="formInstructions">
 <h3>Please Read</h3>
 <div class="formInstructionContainer">
 
@@ -45,7 +50,7 @@
 Some reviews make it to a movie's front page.  This can lead to substantial exposure to your website or blog.  
 Once registered you will be able to provide your social media contacts to gain further exposure.   </p>
 </div>
-</div>
+</div> -->
 <div class="clr"></div>
 {% endblock %}
 

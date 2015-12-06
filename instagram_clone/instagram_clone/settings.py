@@ -125,4 +125,4 @@ REGISTRATION_AUTO_LOGIN = True  # If True, the user will be automatically logged
 #LOGIN_URL = '/accounts/login/'  # The page users are directed to if they are not logged in,
 
 SITE_ID = 1 # Login
-LOGIN_REDIRECT_URL='/profile'
+LOGIN_REDIRECT_URL='/'

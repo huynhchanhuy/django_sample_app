@@ -5,7 +5,8 @@
  - Crispy-Form
  <br />
  - Virtualenv
-<br />
+ <br />
+ - Django Registration Redux
 <h3>How to run the server ?</h3>
  - In source folder
   <br />

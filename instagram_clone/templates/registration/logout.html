@@ -3,7 +3,15 @@
 
 {% block content %}
 <div class="formBlock">
-<h3>Logged out</h3>
+<h3>You are successfully logged out.</h3>
 </div>
+<p> If the browser does not automatically redirect to the homepage. Please <a href="{% url 'home' %}"><b>click me.<b></a></p>
+<script type="text/javascript">
+	
+	    window.setTimeout(function(){
+        window.location.href = "{% url 'home' %}";
 
+    }, 3000)
+
+</script>
 {% endblock %}

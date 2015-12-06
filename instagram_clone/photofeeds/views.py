@@ -4,45 +4,45 @@ from django.core.mail import send_mail
 from django.conf import settings
 
 # Create your views here.
+# def home(request):
+# 	title = 'Welcome !'
+# 	#if request.user.is_authenticated():
+# 		#title = request.user
+# 	#import pprint
+# 	#pprint.pprint(vars(request))
+# 	#import pdb
+# 	#pdb.set_trace()
+# 	form = contact(request) #SignUpForm(request.POST or None)
+# 	context = {
+# 		'title':title,
+# 		'form':form
+# 	}
+# 	if form.is_valid():
+# 		#form.save()
+# 		instance = form.save(commit = False)
+# 		full_name = form.cleaned_data.get("full_name")
+# 		if not full_name:
+# 			full_name = "Empty"
+# 		instance.full_name = full_name
+# 		#print full_name
+# 		#if not instance.full_name:
+# 			#instance.full_name = "Empty"
+# 		instance.save()
+# 		#print instance.email
+# 		#print instance.timestamp
+# 		context = {
+# 			'title':"Thank You",
+# 			#'form':form
+# 		}
+# 	return render(request,"home.html",context)
+
+
+
+
+
+
 def home(request):
-	title = 'Welcome !'
-	#if request.user.is_authenticated():
-		#title = request.user
-	#import pprint
-	#pprint.pprint(vars(request))
-	#import pdb
-	#pdb.set_trace()
-	form = SignUpForm(request.POST or None)
-	context = {
-		'title':title,
-		'form':form
-	}
-	if form.is_valid():
-		#form.save()
-		instance = form.save(commit = False)
-		full_name = form.cleaned_data.get("full_name")
-		if not full_name:
-			full_name = "Empty"
-		instance.full_name = full_name
-		#print full_name
-		#if not instance.full_name:
-			#instance.full_name = "Empty"
-		instance.save()
-		#print instance.email
-		#print instance.timestamp
-		context = {
-			'title':"Thank You",
-			#'form':form
-		}
-	return render(request,"home.html",context)
-
-
-
-
-
-
-def contact(request):
-	title= "Contact Us"
+	title= "Contact Me"
 	form = ContactForm(request.POST or None)
 		
 	if form.is_valid():
@@ -64,4 +64,4 @@ def contact(request):
 		'title':title,
 		'form':form
 	}
-	return render(request,"forms.html",context)
+	return render(request,"home.html",context)

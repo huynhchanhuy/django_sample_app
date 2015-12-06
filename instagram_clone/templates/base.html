@@ -12,24 +12,21 @@
 </head>
 
 <body>
-
   <!-- Static navbar -->
   {% include 'navbar.html' %}
-
-  {% if not request.user.is_authenticated %}
-
-      {% block jumpotron %}   
-      {% block jumpotron_content %}
-      {% endblock %}
+<!-- or request.user.is_staff -->
+  {% if not request.user.is_authenticated or request.user.is_staff %}
+      {% block jumpotron %}
       {% endblock %}
 
       <div class="container">
         {% block content %}
         {% endblock %}
-
       </div> <!-- /container -->
   {% else %}
-    <h1>Logged</h1>
+<div class="container">
+    {% block profile %}
+    {% endblock %}</div>
   {% endif %}
 
   {% include "javascript.html" %}

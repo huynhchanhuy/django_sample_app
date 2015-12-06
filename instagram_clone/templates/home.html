@@ -3,7 +3,7 @@
 
 {% block head_title  %}Welcome | {{block.super}} {% endblock %}
 <!-- Main component for a primary marketing message or call to action -->
-{% block jumpotron_content %}
+{% block jumpotron %}
 <div class="jumbotron">
 <div class="container">
 <div class="row">
@@ -19,11 +19,6 @@
 </div>
 </div>
 </div>
-{% endblock %}
-
-{% block jumpotron %}
-{{block.super}}
-	<!-- JUST TESTING -->
 {% endblock %}
 
 
@@ -63,7 +58,7 @@
         <form action="" method="POST">
             {% csrf_token %}
             {{form|crispy}}
-            <input class="btn btn-primary" type="submit" value="Send"/>
+            <input class="btn btn-primary btn-block" type="submit" value="Send"/>
         </form>
     </div>
 </div>

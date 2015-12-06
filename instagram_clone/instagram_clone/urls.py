@@ -6,7 +6,7 @@ from django.conf.urls.static import static
 urlpatterns = patterns('',
 	url(r'^$', 'photofeeds.views.home' ,name="home"),
 	#url(r'^contact/', 'photofeeds.views.contact' ,name="contact"),
-	url(r'^about', 'instagram_clone.views.about' ,name="about"),
+	url(r'^profile/', 'photofeeds.views.profile' ,name="profile"),
 	url(r'^admin/', include(admin.site.urls)), #set admin
 	url(r'^accounts/',include('registration.backends.default.urls')),
 #url(r'^rango/', include('rango.urls')),

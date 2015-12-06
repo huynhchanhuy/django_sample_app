@@ -1,12 +1,12 @@
 # Django Sample App
-Required:
+<h1>Required:</h1>
  - Django version 1.8
  <br />
  - Crispy-Form
  <br />
  - Virtualenv
  <br />
-How to run the server ?
+<h1>How to run the server ?</h1>
  - In source folder
   <br />
 	source bin/activate

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% load crispy_forms_tags %}
+{% load staticfiles %}
+
+{% block newfeeds %}
+	</br>
+	</br>
+	</br>
+	{% for photofeed in photofeeds %}
+		<img src="{{mediaurl}}{{photofeed}}"> 
+	{% endfor %}
+{% endblock %}

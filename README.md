@@ -1,9 +1,9 @@
 # Django Sample App
-Required:
+#Required:
  - Django version 1.8
  - Crispy-Form
  - Virtualenv
-How to run the server ?
+#How to run the server ?
  - In source folder
 	source bin/activate
  - Next, go to instagram_clone folder

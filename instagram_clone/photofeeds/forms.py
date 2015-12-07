@@ -12,7 +12,7 @@ class UploadForm(forms.ModelForm):
 	# title = forms.CharField(max_length=60)
 	class Meta:
 		model = Image
-		fields = ['image','title']
+		fields = ['image','title','user']
 	def clean_title(self):
 		title = self.cleaned_data.get('title')
 		# to do validation

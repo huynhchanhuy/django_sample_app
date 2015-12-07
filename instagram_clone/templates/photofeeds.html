@@ -3,10 +3,29 @@
 {% load staticfiles %}
 
 {% block newfeeds %}
-	</br>
+<div class="container">
 	</br>
 	</br>
 	{% for photofeed in photofeeds %}
-		<img src="{{mediaurl}}{{photofeed.thumbnail3}}"> 
+	<div class="col">
+	<div class="col-md-8 col-md-offset-2">
+		
+
+    <div class="thumbnail" style="background-color:#f0f0f5">
+    <p style="padding:10px 0px 0px 10px"><strong style="color:blue">{{photofeed.user}}</strong> updated the picture</p>
+    <p style="padding:0px 0px 0px 10px; margin-top:-10px"><i>{{photofeed.created|date:'d-m-Y'}} at {{photofeed.created|date:'h:i a'}}</i></p>
+      <img style="padding:0px 10px 0px 10px" src="{{mediaurl}}{{photofeed.thumbnail3}}"> 
+	
+      <div class="caption">
+        <p>{{photofeed.title}}</p>
+      </div>
+      <hr>
+      
+    </div>
+
+
+	</div>
+	</div>
 	{% endfor %}
+	</div>
 {% endblock %}

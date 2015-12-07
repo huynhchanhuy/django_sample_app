@@ -15,7 +15,7 @@
   <!-- Static navbar -->
   {% include 'navbar.html' %}
 <!-- or request.user.is_staff -->
-  {% if not request.user.is_authenticated or request.user.is_staff %}
+  {% if user.is_authenticated|lower == 'false' or user.is_staff|lower == 'true' %}
       {% block jumpotron %}
       {% endblock %}
 
@@ -35,8 +35,6 @@
 
   </div>
   {% endif %}
-
   {% include "javascript.html" %}
-
 </body>
 </html>

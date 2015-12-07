@@ -39,7 +39,7 @@ def home(request):
 
 	if request.user.is_authenticated():
 		view = "photofeeds.html"
-		photofeeds = Image.objects.all()
+		photofeeds = Image.objects.order_by('-created').all()
 		context['photofeeds']=photofeeds
 		context['mediaurl'] = settings.MEDIA_URL
 		return render(request,view,context)
@@ -56,10 +56,11 @@ def upload(request):
 	if request.method == 'POST':
 		form = UploadForm(request.POST, request.FILES)
 		if form.is_valid():
-			#m = Image.objects.get(pk=course_id)
+			uploadimage = form.save(commit=False)
+			uploadimage.user = request.user
 			# title = form.cleaned_data['title']
 			# print title
-			form.save()
+			uploadimage.save()
 			url = reverse('home', args=(), kwargs={})
 			return HttpResponseRedirect(url)
 	return render(request,'imageupload.html')

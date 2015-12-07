@@ -1,11 +1,12 @@
 from django.shortcuts import render
-from .forms import ContactForm,UploadForm
+from .forms import ContactForm,UploadForm,CommentForm
 from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect
 from .models import Image
+from django_comments.models import Comment
 
 def profile(request):
 	title= "Hello"
@@ -39,6 +40,11 @@ def home(request):
 
 	if request.user.is_authenticated():
 		view = "photofeeds.html"
+		commentform = CommentForm(request.POST or None)
+		context['commentform'] = commentform
+		if commentform.is_valid():
+			commentform.save(commit=False)
+
 		photofeeds = Image.objects.order_by('-created').all()
 		context['photofeeds']=photofeeds
 		context['mediaurl'] = settings.MEDIA_URL

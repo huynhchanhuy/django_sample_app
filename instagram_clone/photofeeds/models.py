@@ -8,6 +8,7 @@ from string import join
 import os
 from django.contrib.auth.models import User
 from django.core.files import File
+from django_comments.models import Comment
 
 # class SignUp(models.Model):
 # 	pass
@@ -76,7 +77,7 @@ class Image(models.Model):
         return "%s x %s" % (self.width, self.height)
 
     def __unicode__(self):
-        return self.image.name
+        return self.title
 
     # def tags_(self):
     #     lst = [x[1] for x in self.tags.values_list()]
@@ -88,14 +89,13 @@ class Image(models.Model):
     thumbnail_.allow_tags = True
 
 
-class Comment(models.Model):
-    user = models.ForeignKey(User, blank=False, null=False)
+class ImageComment(models.Model):
     image = models.ForeignKey(Image, blank=False, null=False)
     tags = models.ManyToManyField(Tag, blank=True)
-    text = models.CharField(max_length=1000)
+    comment = models.ForeignKey(Comment)
     created = models.DateTimeField(auto_now_add=True)
     def tags_(self):
         lst = [x[1] for x in self.tags.values_list()]
         return str(join(lst, ', '))
     def __unicode__(self):
-        return self.text
+        return unicode(self.comment)

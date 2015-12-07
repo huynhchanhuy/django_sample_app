@@ -1,31 +1,89 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 {% load staticfiles %}
+{% load comments %}
 
 {% block newfeeds %}
-<div class="container">
-	</br>
-	</br>
-	{% for photofeed in photofeeds %}
-	<div class="col">
-	<div class="col-md-8 col-md-offset-2">
-		
+<div class="container" style="background-color:#f0f0f5">
+</br>
+</br>
+<!-- <div class="row">
+<div class="col-lg-8 col-lg-offset-2">
+	<form action="{% comment_form_target %}" method="post">
+		{% csrf_token %}
+		<div class="input-group">
+			{{ commentform|crispy }}
+			<span class="input-group-btn">
+				<button class="btn btn-lg btn-default" type="submit">Go!</button>
+			</span>
+		</div>
+	</form>
+</div>
+</div>
+</br> -->
+{% for photofeed in photofeeds %}
+<div class="row" >
+	<div class="col-md-8 col-md-offset-2" >
+		<div class="thumbnail" >
+			<p style="padding:10px 0px 0px 10px"><strong style="color:blue">{{photofeed.user}}</strong> updated the picture</p>
+			<p style="padding:0px 0px 0px 10px; margin-top:-10px"><i>{{photofeed.created|date:'d-m-Y'}} at {{photofeed.created|date:'h:i a'}}</i></p>
+			<img style="padding:0px 10px 0px 10px" src="{{mediaurl}}{{photofeed.thumbnail3}}"> 
 
-    <div class="thumbnail" style="background-color:#f0f0f5">
-    <p style="padding:10px 0px 0px 10px"><strong style="color:blue">{{photofeed.user}}</strong> updated the picture</p>
-    <p style="padding:0px 0px 0px 10px; margin-top:-10px"><i>{{photofeed.created|date:'d-m-Y'}} at {{photofeed.created|date:'h:i a'}}</i></p>
-      <img style="padding:0px 10px 0px 10px" src="{{mediaurl}}{{photofeed.thumbnail3}}"> 
-	
-      <div class="caption">
-        <p>{{photofeed.title}}</p>
-      </div>
-      <hr>
-      
-    </div>
+			<div class="caption">
+				<p>{{photofeed.title}}</p>
+			</div>
+			<hr>
+
+			<div class="row">
+				<div class="col-md-12">
+					<div class="panel panel-primary">
+						<div class="panel-body">
+							<ul class="chat">
+								<li class="left clearfix"><span class="chat-img pull-left">
+									<img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
+								</span>
+								<div class="chat-body clearfix"> 
+									<p>
+										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
+										dolor, quis ullamcorper ligula sodales.
+									</p>
+								</div>
+							</li>
+						</ul>
+					</div>
+					<div class="panel-footer">
+						<!-- <div class="input-group"> -->
+						<!-- <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." /> -->
+						<!-- <span class="input-group-btn"> -->
+						<button type="submit" class="btn btn-default btn-block" id="btn-chat">
+							Send Message</button>
+							<!-- </span> -->
+							<!-- </div> -->
+						</div>
+					</div>
+				</div>
+			</div>
+
+
+<!-- <form action="{% comment_form_target %}" method="post">
+			{% csrf_token %}
+			<div class="input-group">
+				{{ commentform|crispy }}
+				<span class="input-group-btn">
+					<button class="btn btn-lg btn-primary" type="submit">Go!</button>
+				</span>
+			</div>
+		</form> -->
+
 
 
 	</div>
-	</div>
-	{% endfor %}
-	</div>
+</div>
+</div>
+
+{% endfor %}
+</div>
 {% endblock %}
+
+
+

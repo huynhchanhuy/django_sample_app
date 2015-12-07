@@ -10,6 +10,7 @@ urlpatterns = patterns('',
 	url(r'^upload/', 'photofeeds.views.upload' ,name="upload"),
 	url(r'^admin/', include(admin.site.urls)), #set admin
 	url(r'^accounts/',include('registration.backends.default.urls')),
+	url(r'^comments/', include('django_comments.urls')),
 #url(r'^rango/', include('rango.urls')),
 #url(r'^accounts/', include('registration.backends.simple.urls')),
 )

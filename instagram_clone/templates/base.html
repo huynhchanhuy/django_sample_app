@@ -17,10 +17,10 @@
   {% include 'navbar.html' %}
 <!-- or request.user.is_staff -->
   {% if user.is_authenticated|lower == 'false' or user.is_staff|lower == 'true' %}
-        {% block contentguest %}
+        {% block content %}
         {% endblock %}
   {% else %}
-    {% block content %}
+    {% block contentauth %}
     {% endblock %}
   {% endif %}
 </body>

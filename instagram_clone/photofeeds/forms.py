@@ -1,7 +1,7 @@
 # from .models import SignUp
 from django import forms
-from .models import Image
-from django_comments.models import Comment
+from .models import Image,ImageComment
+#from django_comments.models import ImageComment
 from crispy_forms.helper import FormHelper
 from crispy_forms.layout import Layout,Field
 
@@ -15,7 +15,7 @@ class UploadForm(forms.ModelForm):
 	# title = forms.CharField(max_length=60)
 	class Meta:
 		model = Image
-		fields = ['image','title','user']
+		fields = ['image','title']
 	def clean_title(self):
 		title = self.cleaned_data.get('title')
 		# to do validation
@@ -24,7 +24,7 @@ class UploadForm(forms.ModelForm):
 class CommentForm(forms.ModelForm):
 	comment = forms.CharField(label='', widget=forms.Textarea(attrs={'cols': 20, 'rows': 1,'placeholder':"Comment...","class":"form-control"}))
 	class Meta:
-		model = Comment
+		model = ImageComment
 		fields = ['comment']
 
 

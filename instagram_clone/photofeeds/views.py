@@ -5,19 +5,19 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect,HttpResponse
-from .models import Image,Tag
-from django_comments.models import Comment
+from .models import Image,Tag,ImageComment
+#from django_comments.models import Comment
 import json
-from django.db.models import Q
+import re
 
 
-def profile(request):
+def profile(request,user):
 	title= "Hello"
 	context = {
 		'title':title
 	}
 	#if request.user.is_authenticated():
-	queryset = User.objects.filter(email=request.user.email).order_by('-id')[:1]  
+	queryset = User.objects.filter(username=user).order_by('-id')[:1] 
 	context['queryset'] = queryset[0]
 	return render(request,"profile.html",context)
 
@@ -49,17 +49,31 @@ def home(request):
 			commentform.save(commit=False)
 
 		photofeeds = Image.objects.order_by('-created').all()
-		context['photofeeds']=photofeeds
+		context['photofeeds'] = []
+		for img in photofeeds:
+			context['photofeeds'].append({'img':img,'comments':ImageComment.objects.filter(image=img).order_by('-created')})
+
 		context['mediaurl'] = settings.MEDIA_URL
 		return render(request,view,context)
-		# i = 1
-		# for instance in SignUp.objects.all():
-		# 	print(i)
-		# 	print(instance.full_name)
-
 
 
 	return render(request,view,context)
+
+def collectTags(img):
+	text = img.title
+	taglist=getTags(text)
+	for tag in taglist:
+		res=Tag.objects.filter(tag=tag)
+		if res.count() > 0:
+			res=res[0]
+		else:
+			savetag=Tag(tag=tag)
+			savetag.save()
+			res = savetag
+		img.tags.add(res)
+		text =re.sub("#%s"%tag,"<a href=\"{% url 'tags' %}\"/"+tag+"/>#"+tag+"</a>",text)
+	img.title = text
+	return img
 
 def upload(request):
 	if request.method == 'POST':
@@ -67,8 +81,8 @@ def upload(request):
 		if form.is_valid():
 			uploadimage = form.save(commit=False)
 			uploadimage.user = request.user
-			# title = form.cleaned_data['title']
-			# print title
+			uploadimage.save()
+			uploadimage = collectTags(uploadimage)
 			uploadimage.save()
 			url = reverse('home', args=(), kwargs={})
 			return HttpResponseRedirect(url)
@@ -80,32 +94,25 @@ def submitcomment(request):
 	payload={'success':True}
 
 	if request.is_ajax() and request.method == 'POST':
-		image = Image.objects.filter(imghash=request.POST.get('value[2][value]', ''))[:1] [0]
-		taglist=getTags(request.POST.get('value[1][value]', ''))
-		#print tagstack
-		#print image.tags.all().exclude(tag__in=list(["duoc","test"])).count()
+		image_model = Image.objects.filter(imghash=request.POST.get('value[2][value]', ''))[:1][0]
+		comment = request.POST.get('value[1][value]', '')
+		taglist=getTags(comment)
 		for tag in taglist:
 			res=Tag.objects.filter(tag=tag)
 			#print tag
 			if res.count() > 0:
-				#print 'yes'
 				pass
 			else:
-				#print 'no'
 				savetag=Tag(tag=tag)
 				savetag.save()
 				#image.tags.add(savetag)
-		
-		tags = image.tags.all().exclude(tag__in=list([taglist]))
+			comment=re.sub("#%s"%tag,"<a href=\"{% url 'tags' %}\"/"+tag+"/>#"+tag+"</a>",comment)
+		tags = image_model.tags.all().exclude(tag__in=list([taglist]))
 		for tag in tags:
-			image.tags.add(savetag)
-		#imgtag = Image.objects.filter().exclude(tags__in=["duoc","save"])
-		#print imgtag[0]
-			#comment=re.sub("#%s"%tag,"<a href=\"{% url 'tags' %}\"/"+tag+"/>#"+tag+"</a>",comment)
-		#image.add
-		#print request.POST.get('value[1][value]', '')
-		#print vars(image[0])
-		#form = UploadForm(request.POST, request.FILES)
+			image_model.tags.add(tag)
+			
+		comment_model = ImageComment(comment=comment,user=request.user,image=image_model)
+		comment_model.save()
 
 	return HttpResponse(json.dumps(payload), content_type='application/json')
 
@@ -115,6 +122,4 @@ def tags(request):
 	return render(request,view,context)
 
 def getTags(comment):
-	import re
-	print comment
 	return {tag[1:] for tag in comment.split() if tag.startswith("#") and not re.match("#" ,tag[1:])}

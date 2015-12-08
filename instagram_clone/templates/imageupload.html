@@ -1,7 +1,8 @@
 {% extends "base.html" %}
 {% load crispy_forms_tags %}
 
-{% block content %}
+{% block contentauth %}
+<div class="vertical-center"> 
 <div class="container">
 </br>
 </br>
@@ -9,26 +10,22 @@
 
 <div class="row">
 <div class="col-md-6 col-md-offset-3">
-<div class="panel panel-default">
-        <div class="panel-heading text-align-center">Upload Image</div>
-        <div class="panel-body">
-
           <!-- Standar Form -->
-          <form action="" method="post" enctype="multipart/form-data">
+          <form action="" method="POST" enctype="multipart/form-data">
           {% csrf_token %}
           <div class="row">
-                <div class="col-md-12"><textarea rows="4" cols="61" name="title" placeholder="Write a caption..."></textarea></div>
-                </div>
+                <div class="col-md-12"><textarea rows="4" cols="61" name="title" placeholder="Write a caption..."></textarea>
+                  </div>
+            </div>
             <div class="form-inline">
 
               <div class="form-group">
                 <input type="file" name="image">
               </div>
-              <button type="submit" class="btn btn-sm btn-primary pull-right" name="btn">Upload files</button>
+              <button type="submit" class="btn btn-sm btn-primary" name="btn">Upload files</button>
             </div>
           </form>
       </div>
- </div>
  </div>
  </div>
  </div>

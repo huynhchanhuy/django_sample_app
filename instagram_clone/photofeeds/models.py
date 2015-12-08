@@ -8,7 +8,7 @@ from string import join
 import os
 from django.contrib.auth.models import User
 from django.core.files import File
-from django_comments.models import Comment
+#from django_comments.models import Comment
 from binascii import hexlify
 # class SignUp(models.Model):
 # 	pass
@@ -19,6 +19,7 @@ from binascii import hexlify
 
 	# def __unicode__(self):
 	# 	return self.email
+
 
 class Tag(models.Model):
     tag = models.CharField(max_length=50)
@@ -33,7 +34,7 @@ class Image(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     width = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
-    user = models.ForeignKey(User, blank=True, null=True)
+    user = models.ForeignKey(User)
     thumbnail2 = models.ImageField(upload_to="images/", blank=True, null=True)
     thumbnail3 = models.ImageField(upload_to="images/", blank=True, null=True)
     imghash = models.CharField(max_length=32, blank=True, null=True)
@@ -90,6 +91,13 @@ class Image(models.Model):
                                                             (self.image.name, self.thumbnail.name))
     thumbnail_.allow_tags = True
 
+class ImageComment(models.Model):
+    comment = models.CharField(max_length=1024)
+    user = models.ForeignKey(User)
+    image = models.ForeignKey(Image)
+    created = models.DateTimeField(auto_now_add=True)
+    def __unicode__(self):
+        return self.comment
 
 # class ImageComment(models.Model):
 #     image = models.ForeignKey(Image, blank=False, null=False)

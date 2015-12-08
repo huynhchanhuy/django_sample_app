@@ -6,7 +6,13 @@
  <br />
  - Virtualenv
  <br />
+ - Pillow
+ <br />
+ - pytz
+ <br />
  - Django Registration Redux
+<br />
+ - Django Contrib Comment
 <h3>How to run the server ?</h3>
  - In source folder
   <br />

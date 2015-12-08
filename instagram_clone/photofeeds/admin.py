@@ -23,10 +23,10 @@ class ImageAdmin(admin.ModelAdmin):
         if not obj.user: obj.user = request.user
         obj.save()
 
-class ImageCommentAdmin(admin.ModelAdmin):
-    list_display = ["__unicode__","tags_","image","comment","created"]
-    list_filter = ["tags"]
+# class ImageCommentAdmin(admin.ModelAdmin):
+#     list_display = ["__unicode__","tags_","image","comment","created"]
+#     list_filter = ["tags"]
 
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Image, ImageAdmin)
-admin.site.register(ImageComment, ImageCommentAdmin)
+# admin.site.register(ImageComment, ImageCommentAdmin)

@@ -3,8 +3,9 @@
 {% load staticfiles %}
 {% load comments %}
 
-{% block newfeeds %}
+{% block content %}
 <div class="container" style="background-color:#f0f0f5">
+</br>
 </br>
 </br>
 <!-- <div class="row">
@@ -38,51 +39,63 @@
 				<div class="col-md-12">
 					<div class="panel panel-primary">
 						<div class="panel-body">
-							<ul class="chat">
-								<li class="left clearfix"><span class="chat-img pull-left">
-									<img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" />
-								</span>
-								<div class="chat-body clearfix"> 
-									<p>
-										Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare
-										dolor, quis ullamcorper ligula sodales.
-									</p>
-								</div>
-							</li>
+							<ul id="chat{{photofeed.imghash}}" class="chat">
+								{% include "chat.html" with person="Jack Sparrow" comment="Lorem ipsum dolor sit amet, consectetur adipiscing elit. Curabitur bibendum ornare dolor, quis ullamcorper ligula sodales." %}
 						</ul>
 					</div>
 					<div class="panel-footer">
-						<!-- <div class="input-group"> -->
-						<!-- <input id="btn-input" type="text" class="form-control input-sm" placeholder="Type your message here..." /> -->
-						<!-- <span class="input-group-btn"> -->
-						<button type="submit" class="btn btn-default btn-block" id="btn-chat">
-							Send Message</button>
-							<!-- </span> -->
-							<!-- </div> -->
+						<form action="{% url 'submitcomment' %}" method="post">
+			{% csrf_token %}
+			<div class="input-group">
+				{{ commentform|crispy }}
+				<span class="input-group-btn">
+					<input type="submit" name="{{photofeed.imghash}}" class="btn btn-lg btn-primary go" value="Go!" />
+				</span>
+			</div>
+			<input name="hidden" type="hidden" value="{{photofeed.imghash}}" />
+		</form>
 						</div>
 					</div>
 				</div>
 			</div>
 
 
-<!-- <form action="{% comment_form_target %}" method="post">
-			{% csrf_token %}
-			<div class="input-group">
-				{{ commentform|crispy }}
-				<span class="input-group-btn">
-					<button class="btn btn-lg btn-primary" type="submit">Go!</button>
-				</span>
-			</div>
-		</form> -->
-
-
-
+		
 	</div>
 </div>
 </div>
 
 {% endfor %}
 </div>
+
+<script>
+
+
+$("form").submit(function( event ) {
+	var data = $(this).serializeArray();
+	$.ajax({
+               type: "POST",
+               url: "{% url 'submitcomment' %}",
+               data: {'value':data, 'csrfmiddlewaretoken': '{{ csrf_token }}'},
+               dataType: "json",
+               success: function(response) {
+                      // alert(response.message);
+                      // alert('Company likes count is now ' + response.likes_count);
+                      comment = data[1]['value'].replace(/#(\S*)/g,'<a href=\"{% url "tags" %}$1\">$1</a>');
+                      var html = '<li class="left clearfix"><span class="chat-img pull-left"><img src="http://placehold.it/50/55C1E7/fff&text=U" alt="User Avatar" class="img-circle" /></span><div class="chat-body clearfix"> <div class="header"><strong class="primary-font">{{request.user}}</strong></div><p>'+comment+'</p></div></li>';
+                      var hidden = "#chat"+data[2]['value'];
+                      $(hidden).append(html);
+                      
+                },
+                error: function(rs, e) {
+                       alert(rs.responseText)
+          }}); 
+ 	      
+ 	event.preventDefault();
+});
+
+</script>
+
 {% endblock %}
 
 

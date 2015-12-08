@@ -9,7 +9,7 @@ import os
 from django.contrib.auth.models import User
 from django.core.files import File
 from django_comments.models import Comment
-
+from binascii import hexlify
 # class SignUp(models.Model):
 # 	pass
 	# email = models.EmailField()
@@ -29,19 +29,22 @@ class Image(models.Model):
     title = models.CharField(max_length=60, blank=True, null=True)
     image = models.ImageField(upload_to="images/")
     thumbnail = models.ImageField(upload_to="images/", blank=True, null=True)
-    #tags = models.ManyToManyField(Tag, blank=True)
+    tags = models.ManyToManyField(Tag, blank=True)
     created = models.DateTimeField(auto_now_add=True)
     width = models.IntegerField(blank=True, null=True)
     height = models.IntegerField(blank=True, null=True)
     user = models.ForeignKey(User, blank=True, null=True)
     thumbnail2 = models.ImageField(upload_to="images/", blank=True, null=True)
     thumbnail3 = models.ImageField(upload_to="images/", blank=True, null=True)
+    imghash = models.CharField(max_length=32, blank=True, null=True)
 
     def save(self, *args, **kwargs):
         """Save image dimensions."""
         super(Image, self).save(*args, **kwargs)
         im = PImage.open(pjoin(MEDIA_ROOT, self.image.name))
         self.width, self.height = im.size
+
+        self.imghash = hexlify(os.urandom(16))
 
         # large thumbnail
         fn, ext = os.path.splitext(self.image.name)
@@ -71,17 +74,19 @@ class Image(models.Model):
 
         super(Image, self).save(*args, **kwargs)
 
+    def getTags(comment):
+        return {tag[1:] for tag in comment.split() if tag.startswith("#") and not re.match("#" ,tag[1:])}
 
     def size(self):
         """Image size."""
         return "%s x %s" % (self.width, self.height)
 
     def __unicode__(self):
-        return self.title
+        return self.imghash
 
-    # def tags_(self):
-    #     lst = [x[1] for x in self.tags.values_list()]
-    #     return str(join(lst, ', '))
+    def tags_(self):
+        lst = [x[1] for x in self.tags.values_list()]
+        return str(join(lst, ', '))
 
     def thumbnail_(self):
         return """<a href="/media/%s"><img border="0" alt="" src="/media/%s" /></a>""" % (
@@ -89,13 +94,13 @@ class Image(models.Model):
     thumbnail_.allow_tags = True
 
 
-class ImageComment(models.Model):
-    image = models.ForeignKey(Image, blank=False, null=False)
-    tags = models.ManyToManyField(Tag, blank=True)
-    comment = models.ForeignKey(Comment)
-    created = models.DateTimeField(auto_now_add=True)
-    def tags_(self):
-        lst = [x[1] for x in self.tags.values_list()]
-        return str(join(lst, ', '))
-    def __unicode__(self):
-        return unicode(self.comment)
+# class ImageComment(models.Model):
+#     image = models.ForeignKey(Image, blank=False, null=False)
+#     tags = models.ManyToManyField(Tag, blank=True)
+#     comment = models.ForeignKey(Comment)
+#     created = models.DateTimeField(auto_now_add=True)
+#     def tags_(self):
+#         lst = [x[1] for x in self.tags.values_list()]
+#         return str(join(lst, ', '))
+#     def __unicode__(self):
+#         return unicode(self.comment)

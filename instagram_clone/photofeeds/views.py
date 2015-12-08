@@ -4,9 +4,11 @@ from django.core.mail import send_mail
 from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
-from django.http import HttpResponseRedirect
+from django.http import HttpResponseRedirect,HttpResponse
 from .models import Image
 from django_comments.models import Comment
+import json
+
 
 def profile(request):
 	title= "Hello"
@@ -70,3 +72,21 @@ def upload(request):
 			url = reverse('home', args=(), kwargs={})
 			return HttpResponseRedirect(url)
 	return render(request,'imageupload.html')
+
+
+def submitcomment(request):
+	payload={'success':True}
+
+	if request.is_ajax() and request.method == 'POST':
+		pass
+		#image = Image.objects.filter(imghash=request.POST.get('value[1][value]', ''))[:1] 
+		#print request.POST.get('value[1][value]', '')
+		#print vars(image)
+		#form = UploadForm(request.POST, request.FILES)
+
+	return HttpResponse(json.dumps(payload), content_type='application/json')
+
+def tags(request):
+	view="tags.html"
+	context={}
+	return render(request,view,context)

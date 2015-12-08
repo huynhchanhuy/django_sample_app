@@ -8,6 +8,7 @@
   <title>{% block head_title  %}Instagram Clone{% endblock %}</title>
 
   {% include 'head_css.html' %}
+  {% include "javascript.html" %}
 
 </head>
 
@@ -16,25 +17,11 @@
   {% include 'navbar.html' %}
 <!-- or request.user.is_staff -->
   {% if user.is_authenticated|lower == 'false' or user.is_staff|lower == 'true' %}
-      {% block jumpotron %}
-      {% endblock %}
-
-      <div class="container">
-        {% block content %}
+        {% block contentguest %}
         {% endblock %}
-      </div> <!-- /container -->
   {% else %}
-<div class="container">
-    <div>aaa</div>
-    {% block newfeeds %}
+    {% block content %}
     {% endblock %}
-    {% block profile %}
-    {% endblock %}
-    {% block imageupload %}
-    {% endblock %}
-
-  </div>
   {% endif %}
-  {% include "javascript.html" %}
 </body>
 </html>

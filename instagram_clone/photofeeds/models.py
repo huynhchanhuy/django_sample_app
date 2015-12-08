@@ -74,9 +74,6 @@ class Image(models.Model):
 
         super(Image, self).save(*args, **kwargs)
 
-    def getTags(comment):
-        return {tag[1:] for tag in comment.split() if tag.startswith("#") and not re.match("#" ,tag[1:])}
-
     def size(self):
         """Image size."""
         return "%s x %s" % (self.width, self.height)

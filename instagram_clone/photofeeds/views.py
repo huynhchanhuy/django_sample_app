@@ -5,9 +5,10 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect,HttpResponse
-from .models import Image
+from .models import Image,Tag
 from django_comments.models import Comment
 import json
+from django.db.models import Q
 
 
 def profile(request):
@@ -75,13 +76,35 @@ def upload(request):
 
 
 def submitcomment(request):
+	
 	payload={'success':True}
 
 	if request.is_ajax() and request.method == 'POST':
-		pass
-		#image = Image.objects.filter(imghash=request.POST.get('value[1][value]', ''))[:1] 
+		image = Image.objects.filter(imghash=request.POST.get('value[2][value]', ''))[:1] [0]
+		taglist=getTags(request.POST.get('value[1][value]', ''))
+		#print tagstack
+		#print image.tags.all().exclude(tag__in=list(["duoc","test"])).count()
+		for tag in taglist:
+			res=Tag.objects.filter(tag=tag)
+			#print tag
+			if res.count() > 0:
+				#print 'yes'
+				pass
+			else:
+				#print 'no'
+				savetag=Tag(tag=tag)
+				savetag.save()
+				#image.tags.add(savetag)
+		
+		tags = image.tags.all().exclude(tag__in=list([taglist]))
+		for tag in tags:
+			image.tags.add(savetag)
+		#imgtag = Image.objects.filter().exclude(tags__in=["duoc","save"])
+		#print imgtag[0]
+			#comment=re.sub("#%s"%tag,"<a href=\"{% url 'tags' %}\"/"+tag+"/>#"+tag+"</a>",comment)
+		#image.add
 		#print request.POST.get('value[1][value]', '')
-		#print vars(image)
+		#print vars(image[0])
 		#form = UploadForm(request.POST, request.FILES)
 
 	return HttpResponse(json.dumps(payload), content_type='application/json')
@@ -90,3 +113,8 @@ def tags(request):
 	view="tags.html"
 	context={}
 	return render(request,view,context)
+
+def getTags(comment):
+	import re
+	print comment
+	return {tag[1:] for tag in comment.split() if tag.startswith("#") and not re.match("#" ,tag[1:])}

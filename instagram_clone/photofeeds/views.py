@@ -89,7 +89,7 @@ def collectTags(img):
 			savetag.save()
 			res = savetag
 		img.tags.add(res)
-		text =re.sub("#%s"%tag,"<a href=\"{% url 'tags' %}\"/"+tag+"/>#"+tag+"</a>",text)
+		text=re.sub("#%s"%tag,"<a href=\""+reverse('tags', args=(), kwargs={'hashtag':tag})+"\">#"+tag+"</a>",text)
 	img.title = text
 	return img
 
@@ -119,35 +119,38 @@ def submitcomment(request):
 			res=Tag.objects.filter(tag=tag)
 			#print tag
 			if res.count() > 0:
-				pass
+				res = res[0]
 			else:
 				savetag=Tag(tag=tag)
 				savetag.save()
+				res = savetag
 				#image.tags.add(savetag)
-			
+			image_model.tags.add(res)
 
 			comment=re.sub("#%s"%tag,"<a href=\""+reverse('tags', args=(), kwargs={'hashtag':tag})+"\">#"+tag+"</a>",comment)
 			#comment=re.sub("#%s"%tag,"<a href=\"{% url 'tags'"+tag+" %}\"/"+tag+"/>#"+tag+"</a>",comment)
-		tags = image_model.tags.all().exclude(tag__in=list([taglist]))
+		#tags = image_model.tags.all().exclude(tag__in=list([taglist]))
 		payload['comment'] = comment
-		for tag in tags:
-			image_model.tags.add(tag)
+		# for tag in tags:
+		# 	print tag
+		# 	image_model.tags.add(tag)
 			
 		comment_model = ImageComment(comment=comment,user=request.user,image=image_model)
 		comment_model.save()
 
 	return HttpResponse(json.dumps(payload), content_type='application/json')
 
-def tags(request,hashtag):
+def tags(request,hashtag,page=1):
 	if request.user.is_authenticated():
 		context={}
 		commentform = CommentForm(request.POST or None)
 		context['commentform'] = commentform
 		if commentform.is_valid():
 			commentform.save(commit=False)
-
-		photofeeds = Image.objects.filter(tags__tag=hashtag).order_by('-created').all()
-
+		res=Tag.objects.filter(tag=hashtag)
+		print res
+		photofeeds = Image.objects.filter(tags__id=res[0].id).order_by('-created').all()
+		print hashtag
 		if request.method == 'GET':
 			paginator = Paginator(photofeeds, settings.FEEDS_PER_PAGE)
 			try:

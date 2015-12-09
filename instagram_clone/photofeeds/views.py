@@ -11,12 +11,39 @@ import json
 import re
 
 
-def profile(request,user):
+def profile(request,user,page=1):
 	if request.user.is_authenticated():
 		context = {}
-		queryset = User.objects.filter(username=user).order_by('-id')[:1] 
-		context['queryset'] = queryset[0]
-		return render(request,"profile.html",context)
+		userinfo = User.objects.filter(username=user).order_by('-id')[:1][0]
+		context['userpro5'] = user
+		context['queryset'] = userinfo
+
+		photofeeds = Image.objects.filter(user__id=userinfo.id).order_by('-created').all()
+
+		if request.method == 'GET':
+			paginator = Paginator(photofeeds, settings.FEEDS_PER_PAGE)
+			try:
+				photofeeds = paginator.page(page)
+			except PageNotAnInteger:
+				# If page is not an integer, deliver first page.
+				photofeeds = paginator.page(1)
+			except EmptyPage:
+				# If page is out of range (e.g. 9999), deliver last page of results.
+				photofeeds = paginator.page(paginator.num_pages)
+
+		context['previous_page_number'] = photofeeds.previous_page_number
+		context['next_page_number'] = photofeeds.next_page_number
+		context['has_previous'] = photofeeds.has_previous
+		context['has_next'] = photofeeds.has_next
+		context['number'] = photofeeds.number
+		context['paginator'] = photofeeds.paginator
+		context['photofeeds'] = []
+		for img in photofeeds:
+			context['photofeeds'].append({'img':img,'comments':ImageComment.objects.filter(image=img).order_by('-created')})
+
+		context['mediaurl'] = settings.MEDIA_URL
+
+		return render(request,"photofeeds.html",context)
 	return HttpResponseRedirect('/accounts/login')
 
 
@@ -131,9 +158,6 @@ def submitcomment(request):
 			#comment=re.sub("#%s"%tag,"<a href=\"{% url 'tags'"+tag+" %}\"/"+tag+"/>#"+tag+"</a>",comment)
 		#tags = image_model.tags.all().exclude(tag__in=list([taglist]))
 		payload['comment'] = comment
-		# for tag in tags:
-		# 	print tag
-		# 	image_model.tags.add(tag)
 			
 		comment_model = ImageComment(comment=comment,user=request.user,image=image_model)
 		comment_model.save()
@@ -148,9 +172,7 @@ def tags(request,hashtag,page=1):
 		if commentform.is_valid():
 			commentform.save(commit=False)
 		res=Tag.objects.filter(tag=hashtag)
-		print res
 		photofeeds = Image.objects.filter(tags__id=res[0].id).order_by('-created').all()
-		print hashtag
 		if request.method == 'GET':
 			paginator = Paginator(photofeeds, settings.FEEDS_PER_PAGE)
 			try:

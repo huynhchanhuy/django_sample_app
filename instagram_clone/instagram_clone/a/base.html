@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+  {% include 'meta.html' %}
+  <link rel="icon" href="../../favicon.ico">
+
+  <title>{% block head_title  %}Instagram Clone{% endblock %}</title>
+
+  {% include 'head_css.html' %}
+
+</head>
+
+<body>
+  <!-- Static navbar -->
+  {% include 'navbar.html' %}
+<!-- or request.user.is_staff -->
+  {% if not request.user.is_authenticated or request.user.is_staff %}
+      {% block jumpotron %}
+      {% endblock %}
+
+      <div class="container">
+        {% block content %}
+        {% endblock %}
+      </div> <!-- /container -->
+  {% else %}
+<div class="container">
+    <div>aaa</div>
+    {% block newfeeds %}
+    {% endblock %}
+    {% block profile %}
+    {% endblock %}
+    {% block imageupload %}
+    {% endblock %}
+
+  </div>
+  {% endif %}
+
+  {% include "javascript.html" %}
+
+</body>
+</html>

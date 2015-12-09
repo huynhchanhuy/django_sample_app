@@ -1,0 +1,66 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+
+{% block head_title  %}Welcome | {{block.super}} {% endblock %}
+<!-- Main component for a primary marketing message or call to action -->
+{% block jumpotron %}
+<div class="jumbotron">
+<div class="container">
+<div class="row">
+    <div class="col-sm-12">
+        <h1>Instagram Clone App</h1>
+        <p>This web application is the simple version of instagram on mobile app. It is used just for testing and demonstration. There are not any commercial uses for this website.</p>
+        <p>Wanna take a look at this website.</p>
+        <p>
+          <a class="btn btn-lg btn-primary" href="{% url 'registration_register' %}" role="button">Join Us &raquo;</a>
+        </p>
+    </div>
+<!--     <div class="col-sm-6" style="background-color:black; min-height:300px;"></div> -->
+</div>
+</div>
+</div>
+{% endblock %}
+
+
+{% block content %}
+
+<div class="row">
+     <div class="col-sm-6">
+        <h1>
+            Let Get In Touch
+        </h1>
+    </div>
+    {% if title %}
+    <div class="col-sm-6 pull-right">
+        <h1>
+            {{title}}
+        </h1>
+    </div>
+    {% endif %}
+
+</div>
+
+<div class="row">
+    <div class="col-sm-6">
+        <p><i class="fa fa-phone fa-lg"></i>&nbsp;&nbsp;<b>Phone: </b>+84 1679 246 288
+        <p>
+        <p><i class="fa fa-envelope fa-lg"></i>&nbsp;&nbsp;<b>Email: </b><a href="mailto:huynhchanhuy@gmail.com">huynhchanhuy@gmail.com</a>
+        <p>
+        <p><i class="fa fa-linkedin fa-lg"></i>&nbsp;&nbsp;<b>Linkedin: </b><a href="https://www.linkedin.com/in/huynhchanhuy">https://www.linkedin.com/in/huynhchanhuy</a>
+        <p>
+        <p><i class="fa fa-github fa-lg"></i>&nbsp;&nbsp;<b>Github: </b><a href="https://github.com/huynhchanhuy">https://github.com/huynhchanhuy</a>
+        <p>
+        <div  style="clear:both;"></div>
+        <p>© 2015 by Huy Huynh. Using <a href="http://getbootstrap.com/">Bootstrap</a> theme.</p>
+        
+    </div>
+    <div class="col-sm-6 pull-right">
+        <form action="" method="POST">
+            {% csrf_token %}
+            {{contactform|crispy}}
+            <input class="btn btn-primary btn-block" type="submit" value="Send"/>
+        </form>
+    </div>
+</div>
+
+{% endblock %}

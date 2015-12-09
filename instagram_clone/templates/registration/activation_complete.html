@@ -1,4 +1,4 @@
-{% extends "base.html" %}
+{% extends "tbase.html" %}
 
 {% block title %}Account activation complete{% endblock %}
 {% block body_class %}{{ block.super }} registration_activation_complete{% endblock %}
@@ -10,9 +10,11 @@
 
 
 {% block content %}
+  <h3>Account activation complete</h3>
+<div class="container">
 <div class="formBlock">
   <p style="font-size: 16px;">Congratulations, your account with Instagram Clone has been activated.</p>
   <p style="font-size: 16px;">You're ready to <a href="{% url 'auth_login' %}">Log In</a>.</p>
 </div>
-
+</div>
 {% endblock %}

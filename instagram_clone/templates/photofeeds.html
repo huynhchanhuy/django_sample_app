@@ -3,6 +3,12 @@
 {% load staticfiles %}
 
 {% block contentauth %}
+
+
+{% if userpro5 %}
+	{% include 'profile.html' with queryset=queryset %}
+{% endif %}
+
 <div class="container" style="background-color:#f0f0f5">
 {% for photofeed in photofeeds %}
 <div class="row" >

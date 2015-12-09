@@ -27,7 +27,7 @@ class Tag(models.Model):
         return self.tag
 
 class Image(models.Model):
-    title = models.CharField(max_length=60, blank=True, null=True)
+    title = models.CharField(max_length=2000, blank=True, null=True)
     image = models.ImageField(upload_to="images/")
     thumbnail = models.ImageField(upload_to="images/", blank=True, null=True)
     tags = models.ManyToManyField(Tag, blank=True)
@@ -92,7 +92,7 @@ class Image(models.Model):
     thumbnail_.allow_tags = True
 
 class ImageComment(models.Model):
-    comment = models.CharField(max_length=1024)
+    comment = models.CharField(max_length=2000)
     user = models.ForeignKey(User)
     image = models.ForeignKey(Image)
     created = models.DateTimeField(auto_now_add=True)

@@ -25,9 +25,9 @@ if not settings.DEBUG:
 	SECRET_KEY = 'c3r6c=yaz^)un$$shghw*=6hcx38mcly#ohb+ygx*bv6n)w%bm'
 
 	# SECURITY WARNING: don't run with debug turned on in production!
-	DEBUG = False
+	DEBUG = True
 
-	TEMPLATE_DEBUG = False
+	TEMPLATE_DEBUG = True
 
 	ALLOWED_HOSTS = ['ducvanst.webfactional.com']
 
@@ -134,7 +134,7 @@ if not settings.DEBUG:
 	#LOGIN_REDIRECT_URL = '/rango/'  # The page you want users to arrive at after they successful log in
 	#LOGIN_URL = '/accounts/login/'  # The page users are directed to if they are not logged in,
 
-	#SITE_ID = 1 # Login
+	SITE_ID = 1 # Login
 	LOGIN_REDIRECT_URL='/'
 
 	FEEDS_PER_PAGE=5

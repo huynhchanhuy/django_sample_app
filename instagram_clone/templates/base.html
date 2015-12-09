@@ -15,6 +15,9 @@
 <body>
   <!-- Static navbar -->
   {% include 'navbar.html' %}
+  </br>
+</br>
+</br>
 <!-- or request.user.is_staff -->
   {% if user.is_authenticated|lower == 'false' or user.is_staff|lower == 'true' %}
         {% block content %}

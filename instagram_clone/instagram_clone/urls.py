@@ -5,10 +5,10 @@ from django.conf.urls.static import static
 
 urlpatterns = patterns('',
 	url(r'^$', 'photofeeds.views.home' ,name="home"),
-	#url(r'^contact/', 'photofeeds.views.contact' ,name="contact"),
-	#url(r'^profile/', 'photofeeds.views.profile' ,name="profile"),
+	url(r'^page/(?P<page>[0-9]+)/$','photofeeds.views.home', name="home"),
 	url(r'^upload/$', 'photofeeds.views.upload' ,name="upload"),
-	url(r'^tags/$', 'photofeeds.views.tags' ,name="tags"),
+	url(r'^tags/', 'photofeeds.views.tags' ,name="tags"),
+	url(r'^tags/(?P<hashtag>\w{0,32})/$', 'photofeeds.views.tags' ,name="tags"),
 	url(r'^submitcomment/$', 'photofeeds.views.submitcomment' ,name="submitcomment"),
 	url(r'^profile/(?P<user>\w{0,32})/$', 'photofeeds.views.profile' ,name="profile"),
 	url(r'^admin/', include(admin.site.urls)), #set admin

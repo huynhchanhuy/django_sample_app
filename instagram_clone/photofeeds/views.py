@@ -6,22 +6,22 @@ from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect,HttpResponse
 from .models import Image,Tag,ImageComment
-#from django_comments.models import Comment
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 import re
 
 
 def profile(request,user):
-	title= "Hello"
-	context = {
-		'title':title
-	}
-	#if request.user.is_authenticated():
-	queryset = User.objects.filter(username=user).order_by('-id')[:1] 
-	context['queryset'] = queryset[0]
-	return render(request,"profile.html",context)
+	if request.user.is_authenticated():
+		context = {}
+		queryset = User.objects.filter(username=user).order_by('-id')[:1] 
+		context['queryset'] = queryset[0]
+		return render(request,"profile.html",context)
+	return HttpResponseRedirect('/accounts/login')
 
-def home(request):
+
+
+def home(request,page=1):
 	title= "Contact Me"
 	view = "home.html"
 	contactform = ContactForm(request.POST or None)
@@ -49,6 +49,24 @@ def home(request):
 			commentform.save(commit=False)
 
 		photofeeds = Image.objects.order_by('-created').all()
+
+		if request.method == 'GET':
+			paginator = Paginator(photofeeds, settings.FEEDS_PER_PAGE)
+			try:
+				photofeeds = paginator.page(page)
+			except PageNotAnInteger:
+				# If page is not an integer, deliver first page.
+				photofeeds = paginator.page(1)
+			except EmptyPage:
+				# If page is out of range (e.g. 9999), deliver last page of results.
+				photofeeds = paginator.page(paginator.num_pages)
+
+		context['previous_page_number'] = photofeeds.previous_page_number
+		context['next_page_number'] = photofeeds.next_page_number
+		context['has_previous'] = photofeeds.has_previous
+		context['has_next'] = photofeeds.has_next
+		context['number'] = photofeeds.number
+		context['paginator'] = photofeeds.paginator
 		context['photofeeds'] = []
 		for img in photofeeds:
 			context['photofeeds'].append({'img':img,'comments':ImageComment.objects.filter(image=img).order_by('-created')})
@@ -106,8 +124,12 @@ def submitcomment(request):
 				savetag=Tag(tag=tag)
 				savetag.save()
 				#image.tags.add(savetag)
-			comment=re.sub("#%s"%tag,"<a href=\"{% url 'tags' %}\"/"+tag+"/>#"+tag+"</a>",comment)
+			
+
+			comment=re.sub("#%s"%tag,"<a href=\""+reverse('tags', args=(), kwargs={'hashtag':tag})+"\">#"+tag+"</a>",comment)
+			#comment=re.sub("#%s"%tag,"<a href=\"{% url 'tags'"+tag+" %}\"/"+tag+"/>#"+tag+"</a>",comment)
 		tags = image_model.tags.all().exclude(tag__in=list([taglist]))
+		payload['comment'] = comment
 		for tag in tags:
 			image_model.tags.add(tag)
 			
@@ -116,10 +138,41 @@ def submitcomment(request):
 
 	return HttpResponse(json.dumps(payload), content_type='application/json')
 
-def tags(request):
-	view="tags.html"
-	context={}
-	return render(request,view,context)
+def tags(request,hashtag):
+	if request.user.is_authenticated():
+		context={}
+		commentform = CommentForm(request.POST or None)
+		context['commentform'] = commentform
+		if commentform.is_valid():
+			commentform.save(commit=False)
+
+		photofeeds = Image.objects.filter(tags__tag=hashtag).order_by('-created').all()
+
+		if request.method == 'GET':
+			paginator = Paginator(photofeeds, settings.FEEDS_PER_PAGE)
+			try:
+				photofeeds = paginator.page(page)
+			except PageNotAnInteger:
+				# If page is not an integer, deliver first page.
+				photofeeds = paginator.page(1)
+			except EmptyPage:
+				# If page is out of range (e.g. 9999), deliver last page of results.
+				photofeeds = paginator.page(paginator.num_pages)
+
+		context['previous_page_number'] = photofeeds.previous_page_number
+		context['next_page_number'] = photofeeds.next_page_number
+		context['has_previous'] = photofeeds.has_previous
+		context['has_next'] = photofeeds.has_next
+		context['number'] = photofeeds.number
+		context['paginator'] = photofeeds.paginator
+		context['photofeeds'] = []
+		for img in photofeeds:
+			context['photofeeds'].append({'img':img,'comments':ImageComment.objects.filter(image=img).order_by('-created')})
+
+		context['mediaurl'] = settings.MEDIA_URL
+		return render(request,'photofeeds.html',context)
+
+	return HttpResponseRedirect(reverse('home', args=(), kwargs={}))
 
 def getTags(comment):
 	return {tag[1:] for tag in comment.split() if tag.startswith("#") and not re.match("#" ,tag[1:])}

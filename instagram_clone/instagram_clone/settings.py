@@ -127,3 +127,5 @@ REGISTRATION_AUTO_LOGIN = True  # If True, the user will be automatically logged
 
 SITE_ID = 1 # Login
 LOGIN_REDIRECT_URL='/'
+
+FEEDS_PER_PAGE=2

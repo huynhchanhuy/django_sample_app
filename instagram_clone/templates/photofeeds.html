@@ -5,8 +5,11 @@
 {% block contentauth %}
 
 
+
 {% if userpro5 %}
-	{% include 'profile.html' with queryset=queryset %}
+	{% include 'profile.html' with queryset=queryset hashfollowed=hasfollowed %}
+{% elif hashtag %}
+	<div class="container "><h3 style="position:fixed">Tag: {{hashtag}}</h3></div>
 {% endif %}
 
 <div class="container" style="background-color:#f0f0f5">

@@ -99,6 +99,12 @@ class ImageComment(models.Model):
     def __unicode__(self):
         return self.comment
 
+class UserFollow(models.Model):
+    user = models.ForeignKey(User, related_name="user_pro5")
+    follower = models.ForeignKey(User, related_name="user_follow")
+    def __unicode__(self):
+        return "UserFollow"
+
 # class ImageComment(models.Model):
 #     image = models.ForeignKey(Image, blank=False, null=False)
 #     tags = models.ManyToManyField(Tag, blank=True)

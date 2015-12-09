@@ -26,6 +26,9 @@ class ImageAdmin(admin.ModelAdmin):
 class ImageCommentAdmin(admin.ModelAdmin):
     list_display = ["comment"]
 
+class UserFollowAdmin(admin.ModelAdmin):
+    list_display = ["__unicode__", "follower", "user"]
+
 # class ImageCommentAdmin(admin.ModelAdmin):
 #     list_display = ["__unicode__","tags_","image","comment","created"]
 #     list_filter = ["tags"]
@@ -33,4 +36,5 @@ class ImageCommentAdmin(admin.ModelAdmin):
 admin.site.register(Tag, TagAdmin)
 admin.site.register(Image, ImageAdmin)
 admin.site.register(ImageComment, ImageCommentAdmin)
+admin.site.register(UserFollow, UserFollowAdmin)
 # admin.site.register(ImageComment, ImageCommentAdmin)

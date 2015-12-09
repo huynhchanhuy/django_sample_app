@@ -5,7 +5,7 @@ from django.conf import settings
 from django.contrib.auth.models import User
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect,HttpResponse
-from .models import Image,Tag,ImageComment
+from .models import Image,Tag,ImageComment,UserFollow
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 import json
 import re
@@ -17,7 +17,17 @@ def profile(request,user,page=1):
 		userinfo = User.objects.filter(username=user).order_by('-id')[:1][0]
 		context['userpro5'] = user
 		context['queryset'] = userinfo
-
+		if user == request.user.username:
+			pass
+		else:
+			follower = User.objects.filter(username=request.user).order_by('-id')[:1][0]
+			userfollow = UserFollow.objects.filter(user__id=userinfo.id,
+				follower__id=follower.id)
+			if userfollow.count() > 0:
+				context['hasfollowed'] = 1
+			else:
+				context['hasfollowed'] = 2
+		
 		photofeeds = Image.objects.filter(user__id=userinfo.id).order_by('-created').all()
 
 		if request.method == 'GET':
@@ -46,7 +56,28 @@ def profile(request,user,page=1):
 		return render(request,"photofeeds.html",context)
 	return HttpResponseRedirect('/accounts/login')
 
+def followby(request,user):
+	if request.user.is_authenticated():
+		
+		userinfo = User.objects.filter(username=user).order_by('-id')[:1][0]
+		follower = User.objects.filter(username=request.user).order_by('-id')[:1][0]
 
+		userfollow = UserFollow.objects.filter(user__id=userinfo.id,
+				follower__id=follower.id)
+		if userfollow.count() > 0:
+			pass
+		else:
+			userfollow = UserFollow(user=userinfo,follower=follower)
+			userfollow.save()
+			subject="You have a new follower"
+			from_email = settings.EMAIL_HOST_USER
+			#print from_email
+			to_email = [userinfo.email] # or huynhchanhuy@gmail.com ||| system email to admin@email
+			contact_message = "You are followed by %s" % (request.user)
+			send_mail(subject,contact_message, from_email,to_email,fail_silently=False)
+
+		url = reverse('profile', args=(), kwargs={'user':user})
+		return HttpResponseRedirect(url)
 
 def home(request,page=1):
 	title= "Contact Me"
@@ -61,10 +92,10 @@ def home(request,page=1):
 		form_email = contactform.cleaned_data.get("email")
 		form_message = contactform.cleaned_data.get("message")
 
-		subject="Test"
+		subject="Contact"
 		from_email = settings.EMAIL_HOST_USER
 		#print from_email
-		to_email = ['huynhchanhuy@gmail.com'] # or huynhchanhuy@gmail.com ||| system email to admin@email
+		to_email = [settings.ADMIN_EMAIL] # or huynhchanhuy@gmail.com ||| system email to admin@email
 		contact_message = "Name: %s: \nMessage:\n%s \nEmail: %s " % (form_full_name,form_message,form_email)
 		send_mail(subject,contact_message, from_email,to_email,fail_silently=False)
 
@@ -166,7 +197,7 @@ def submitcomment(request):
 
 def tags(request,hashtag,page=1):
 	if request.user.is_authenticated():
-		context={}
+		context={"hashtag":hashtag}
 		commentform = CommentForm(request.POST or None)
 		context['commentform'] = commentform
 		if commentform.is_valid():
@@ -200,4 +231,4 @@ def tags(request,hashtag,page=1):
 	return HttpResponseRedirect(reverse('home', args=(), kwargs={}))
 
 def getTags(comment):
-	return {tag[1:] for tag in comment.split() if tag.startswith("#") and not re.match("#" ,tag[1:])}
+	return {tag[1:] for tag in comment.split() if tag.startswith("#") and "#" not in tag[1:]}

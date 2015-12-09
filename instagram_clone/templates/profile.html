@@ -10,7 +10,17 @@
    
           <div class="panel panel-info">
             <div class="panel-heading">
-              <h3 class="panel-title">{{queryset.username}}</h3>
+             <table><tr><td><h3 class="panel-title pull-left">{{queryset.username}} &nbsp;&nbsp; </h3> </td><td align="right">
+
+             {% if hasfollowed == 1 %}
+
+                <a id="submit1" class="btn btn-default pull-right" disabled="disabled">Followed</a>
+{% elif hasfollowed == 2 %}
+  <a href="{% url 'followby' queryset.username %}" id="submit1" class="btn btn-default pull-right">Follow</a>
+{% endif %}
+
+
+             </td></tr></table>
             </div>
             <div class="panel-body">
               <div class="row">
@@ -43,6 +53,7 @@
         </div>
       </div>
 {% endif %}
+
 
 <h2>All Posts</h2>
 </div>

@@ -10,6 +10,7 @@ urlpatterns = patterns('',
 	url(r'^tags/(?P<hashtag>\w{0,32})/', 'photofeeds.views.tags' ,name="tags"),
 	url(r'^tags/(?P<hashtag>\w{0,32})/(?P<page>[0-9]+)/', 'photofeeds.views.tags' ,name="tags"),
 	url(r'^submitcomment/$', 'photofeeds.views.submitcomment' ,name="submitcomment"),
+	url(r'^followby/(?P<user>\w{0,32})/', 'photofeeds.views.followby' ,name="followby"),
 	url(r'^profile/(?P<user>\w{0,32})/', 'photofeeds.views.profile' ,name="profile"),
 	url(r'^profile/(?P<user>\w{0,32})/(?P<page>[0-9]+)', 'photofeeds.views.profile' ,name="profile"),
 	url(r'^admin/', include(admin.site.urls)), #set admin

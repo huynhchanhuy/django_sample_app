@@ -20,6 +20,9 @@ urlpatterns = patterns('',
 #url(r'^accounts/', include('registration.backends.simple.urls')),
 )
 
+# print settings.DEBUG
+# print settings.DATABASES
+
 if settings.DEBUG:
 	# print settings.STATIC_URL
 	# print settings.MEDIA_URL

@@ -3,7 +3,7 @@
 </span>
 <div class="chat-body clearfix"> 
 	<div class="header">
-        <strong class="primary-font">{{person}}</strong>
+        <strong class="primary-font"><a href="{% url 'profile' person %}">{{person}}</a></strong>
     </div>
 		<p>
 			{{message}}
